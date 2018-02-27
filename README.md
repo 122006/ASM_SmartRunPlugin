@@ -1,5 +1,26 @@
 ## [ASM_SmartRunPluginImp 线程调度插件](src/main/groovy/com/by122006/buildsrc/ASM_SmartRunPluginImp.groovy)
-    适用于任何需要线程切换的程序
+
+适用于任何需要线程切换的程序。
+
+你可以对方法进行简单注解，使方法在调用时自动运行在指定线程。
+
+* 使用 **注解** 进行方法线程设定
+
+         @UIThread
+         public void xx(xx) {
+
+         }
+   * 使用`@UIThread`设置方法运行于主线程
+   * 使用`@BGThread`设置方法运行于后台线程
+   * 更多功能设置请参考 **高级功能**
+
+* 同类对比
+
+    1. 无需对类名、方法名进行额外字符附加，与正常方法调用 **写法完全相同**
+    2. 无需预编译生成build类
+    3. 占用编译时间只有部分相似插件的**5%**
+    4. 消耗的方法量和原生线程调用写法完成相同
+    5. 支持返回值，方法等待，方法超时等功能
 
 * 插件引入
 
@@ -28,14 +49,6 @@
 
     当前版本号：[![](https://jitpack.io/v/122006/ASM_SmartRunPluginImp.svg)](https://jitpack.io/#122006/ASM_SmartRunPluginImp)
 
-* 使用 **注解** 进行方法线程设定
-
-         @UIThread
-         public void xx(xx) {
-
-         }
-   * 使用`@UIThread`设置方法运行于主线程
-   * 使用`@BGThread`设置方法运行于后台线程
 
 * 使用 **方法** 进行方法线程设定
 
