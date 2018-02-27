@@ -1,1 +1,1 @@
-include ':app', ':ASMSmartRunPlugin'
+include ':app', ':ASMPlugin', ':Utils'
