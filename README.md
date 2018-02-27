@@ -1,5 +1,33 @@
 ## [ASM_SmartRunPluginImp 线程调度插件](src/main/groovy/com/by122006/buildsrc/ASM_SmartRunPluginImp.groovy)
     适用于任何需要线程切换的程序
+
+* 插件引入
+
+    Step 1. 在你的根目录中加入以下仓库目录
+
+	    allprojects {
+		    repositories {
+		    	...
+		    	maven { url 'https://jitpack.io' }
+		    }
+		    dependencies {
+		        ...
+                classpath 'com.github.122006.ASM_SmartRunPluginImp:ASMPlugin:版本号'
+            }
+	    }
+    Step 2. 在需要使用插件的module中增加以下内容
+
+	    apply plugin: 'smartrun'
+
+    以及
+
+	    dependencies {
+	        ...
+	        compile 'com.github.122006.ASM_SmartRunPluginImp:Utils:版本号'
+	    }
+
+    当前版本号：[![](https://jitpack.io/v/122006/ASM_SmartRunPluginImp.svg)](https://jitpack.io/#122006/ASM_SmartRunPluginImp)
+
 * 使用 **注解** 进行方法线程设定
 
          @UIThread
