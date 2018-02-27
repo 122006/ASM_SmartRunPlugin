@@ -571,7 +571,11 @@ public class SmartRunClassVisitor extends ClassVisitor {
                     if (String.valueOf(o).equals("Sync")) NewThread = false;
                 }
                 if (s.equals("OutTime")) {
-                    OutTime = Long.parseLong(String.valueOf(o));
+                    try {
+                        OutTime = Long.parseLong(String.valueOf(o));
+                    } catch (NumberFormatException e) {
+                        OutTime=2000;
+                    }
                 }
                 if (s.equals("Result")) {
                     if (String.valueOf(o).equals("Skip")) Result = false;
