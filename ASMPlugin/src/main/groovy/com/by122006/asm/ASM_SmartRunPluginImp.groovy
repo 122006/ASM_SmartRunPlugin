@@ -3,15 +3,12 @@ package com.by122006.asm
 import com.android.build.api.transform.*
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.by122006.asm.Scanners.CommomScanner
+import com.by122006.asm.Scanners.OverAllScanner
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.objectweb.asm.ClassReader
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.ClassWriter
-
-import static org.objectweb.asm.ClassReader.EXPAND_FRAMES
 
 public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
     void apply(Project project) {
@@ -53,44 +50,50 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
     void transform(Context context, Collection<TransformInput> inputs, Collection<TransformInput> referencedInputs,
                    TransformOutputProvider outputProvider, boolean isIncremental) throws IOException, TransformException, InterruptedException {
         System.out.println("===============ASMSmartRunPluginImp visit start===============");
-        long startTime=System.currentTimeMillis()
+        long startTime = System.currentTimeMillis()
         //遍历inputs里的TransformInput
 //        println isIncremental
-        inputs.each { TransformInput input ->println input.toString()}
+        inputs.each { TransformInput input -> println input.toString() }
         inputs.each { TransformInput input ->
             //遍历input里边的DirectoryInput
             input.directoryInputs.each {
+                    //                DirectoryInput directoryInput ->
+//
+////                    println '//PluginImp find file:' +directoryInput.file.name
+//                    //是否是目录
+//                    if (directoryInput.file.isDirectory()) {
+//                        //遍历目录
+//                        directoryInput.file.eachFileRecurse {
+//                            File file ->
+//                                def filename = file.name;
+//                                def name = file.name
+//                                //这里进行我们的处理 TODO
+//                                if (name.endsWith(".class") && !name.startsWith("R\$") &&
+//                                        !"R.class".equals(name) && !"BuildConfig.class".equals(name)&& !name.contains("R\$SmartRun_")) {
+//                                    ClassReader classReader = new ClassReader(file.bytes)
+//                                    ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES)
+//                                    def className = name.split(".class")[0]
+//                                    ClassVisitor cv = new SmartRunClassVisitor(className,classWriter);
+//                                    cv.setFile(file)
+//                                    cv.setPackageClassName(classReader.getClassName())
+//                                    classReader.accept(cv, EXPAND_FRAMES)
+//
+//                                    byte[] code = classWriter.toByteArray()
+//                                    FileOutputStream fos = new FileOutputStream(
+//                                            file.parentFile.absolutePath + File.separator + name)
+//                                    fos.write(code)
+//                                    fos.close()
+//
+//                                }
+////                                println '//PluginImp find file:' + file.getAbsolutePath()
+//                        }
+//                    }
+
                 DirectoryInput directoryInput ->
-
-//                    println '//PluginImp find file:' +directoryInput.file.name
-                    //是否是目录
-                    if (directoryInput.file.isDirectory()) {
-                        //遍历目录
-                        directoryInput.file.eachFileRecurse {
-                            File file ->
-                                def filename = file.name;
-                                def name = file.name
-                                //这里进行我们的处理 TODO
-                                if (name.endsWith(".class") && !name.startsWith("R\$") &&
-                                        !"R.class".equals(name) && !"BuildConfig.class".equals(name)&& !name.contains("R\$SmartRun_")) {
-                                    ClassReader classReader = new ClassReader(file.bytes)
-                                    ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES)
-                                    def className = name.split(".class")[0]
-                                    ClassVisitor cv = new SmartRunClassVisitor(className,classWriter);
-                                    cv.setFile(file)
-                                    cv.setPackageClassName(classReader.getClassName())
-                                    classReader.accept(cv, EXPAND_FRAMES)
-
-                                    byte[] code = classWriter.toByteArray()
-                                    FileOutputStream fos = new FileOutputStream(
-                                            file.parentFile.absolutePath + File.separator + name)
-                                    fos.write(code)
-                                    fos.close()
-
-                                }
-//                                println '//PluginImp find file:' + file.getAbsolutePath()
-                        }
-                    }
+                    System.out.println("************ OverAllScanner start **********")
+                    new OverAllScanner().scan(directoryInput)
+                    System.out.println("************ CommomScanner start **********")
+                    new CommomScanner().scan()
                     //处理完输入文件之后，要把输出给下一个任务
                     def dest = outputProvider.getContentLocation(directoryInput.name,
                             directoryInput.contentTypes, directoryInput.scopes,
@@ -119,8 +122,8 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
             }
 
         }
-        long time=startTime-System.currentTimeMillis();
-        println '//===============ASMSmartRunPluginImp visit end== '+time+'ms' +
+        long time = startTime - System.currentTimeMillis();
+        println '//===============ASMSmartRunPluginImp visit end== ' + time + 'ms' +
                 ' =======//'
 
     }

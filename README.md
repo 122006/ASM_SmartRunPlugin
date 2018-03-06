@@ -24,7 +24,7 @@
 
 * 插件引入
 
-    Step 1. 在你的根目录中加入以下仓库目录
+    Step 1. 在你的根目录中加入以下仓库目录及插件依赖
 
 	    allprojects {
 		    repositories {
@@ -36,11 +36,11 @@
                 classpath 'com.github.122006.ASM_SmartRunPluginImp:ASMPlugin:版本号'
             }
 	    }
-    Step 2. 在需要使用插件的module中增加以下内容
+    Step 2. 在需要使用插件的module开头增加以下内容
 
 	    apply plugin: 'smartrun'
 
-    以及
+    以及增加工具类依赖
 
 	    dependencies {
 	        ...
@@ -93,6 +93,12 @@
         3. `Sync`将 **忽略** 设置的超时及返回值（`OutTime`、`Result`）
         4. 默认：异步(`Style = Async`)
         4. 只适用于`BGThread`。`UIThread`均为同步任务
+
+    * **支持父类/接口继承**
+
+        1. 继承顺序：按照代码顺序依次搜寻所有父类和接口中已注明的线程信息内容，优先搜索父类而不是接口
+        2. 只会继承本插件相关的注解信息，不影响其他注解
+        3. 因此，你可以在接口中注解线程信息，使应用到的所有子类都使用同一规则
 
 * 其他注意事项
 

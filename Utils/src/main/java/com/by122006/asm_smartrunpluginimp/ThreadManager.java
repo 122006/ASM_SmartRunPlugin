@@ -3,7 +3,7 @@ package com.by122006.asm_smartrunpluginimp;
 import com.by122006.asm_smartrunpluginimp.Utils.ThreadUtils;
 
 /**
- * Created by admin on 2017/7/7.
+ * Created by 122006 on 2017/7/7.
  */
 
 public class ThreadManager {
