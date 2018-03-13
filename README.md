@@ -24,7 +24,7 @@
 
 * 插件引入
 
-    Step 1. 在你的根目录中加入以下仓库目录及插件依赖
+    Step 1. 在你的根目录项目`build.gradle`文件中加入以下仓库目录及插件依赖
 
 	    allprojects {
 		    repositories {
@@ -36,7 +36,7 @@
                 classpath 'com.github.122006.ASM_SmartRunPluginImp:ASMPlugin:版本号'
             }
 	    }
-    Step 2. 在需要使用插件的module开头增加以下内容
+    Step 2. 在需要使用插件的module的`build.gradle`文件中开头增加以下内容
 
 	    apply plugin: 'smartrun'
 
@@ -103,3 +103,5 @@
 * 其他注意事项
 
    * **同继承参数类型方法调用不正确**：如果有多个同名方法，且参数被继承或者为基础类型及基础类型包装器，可能会调用错误的方法(eg:xx(int)和xx(Integer))
+
+   * **方法调用结构变动**：方法正常调用会被插入处理方法，如果检索方法调用堆栈会检索到处理方法而不是原调用方法。且实际运行方法也会被重命名。不影响正常使用

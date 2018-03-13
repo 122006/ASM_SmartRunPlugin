@@ -42,6 +42,7 @@ public class CommomClassVisitor extends ClassVisitor {
 //                }
 //            }
     }
+    ArrayList<String> methodNames =new ArrayList<>();
 
 
     @Override
@@ -49,6 +50,7 @@ public class CommomClassVisitor extends ClassVisitor {
                                      String[] exceptions) {
         boolean change = false;
         AnnotationData annotationData = null;
+        if (methodNames.contains(name+desc)) return null;
         if (name.equals("doCycleAction")||name.contains("$SmartRun_")) change = false;
         else {
             annotationData = getUsedAnnotationData(name, desc, null);
@@ -59,6 +61,7 @@ public class CommomClassVisitor extends ClassVisitor {
                 change = true;
             }
         }
+        methodNames.add(name+desc);
 //        System.out.println(String.format("%s.%s 方法%s ", visitName, name, change + ""));
         if (change) {
             MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
