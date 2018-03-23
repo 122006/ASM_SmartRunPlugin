@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 public class ThreadUtils {
 
-    public static void runOnUiThread(Runnable runnable) throws Exception {
+    public static void runOnUiThread(Runnable runnable){
 //        uiThreadAct.runUITask(runnable);
         UiHandle.run(runnable);
     }

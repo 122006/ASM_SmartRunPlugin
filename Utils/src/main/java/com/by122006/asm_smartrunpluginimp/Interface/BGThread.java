@@ -21,4 +21,5 @@ public @interface BGThread {
     long OutTime() default 2000L ;
 
     String Result() default Skip;
+
 }
