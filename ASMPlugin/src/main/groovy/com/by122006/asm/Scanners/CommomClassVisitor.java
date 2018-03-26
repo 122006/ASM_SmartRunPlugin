@@ -168,8 +168,8 @@ public class CommomClassVisitor extends ClassVisitor {
                 String style = annotation.toLowerCase().contains("uithread") ? "UI" : "BG";
                 //重命名并开始注入
                 ov = mv;
-                System.out.println("access: "+Integer.toBinaryString(access)+"  -> "+Integer.toBinaryString((access |ACC_PROTECTED)&~ACC_PRIVATE));
-                mv = cv.visitMethod((access |ACC_PROTECTED)&(~ACC_PRIVATE), name + "$SmartRun_" + style, desc, signature, exceptions);
+                System.out.println("access: "+Integer.toBinaryString(access)+"  -> "+Integer.toBinaryString((access |ACC_PROTECTED)&~ACC_PRIVATE&~ACC_PUBLIC));
+                mv = cv.visitMethod((access |ACC_PROTECTED)&(~ACC_PRIVATE)&(~ACC_PUBLIC), name + "$SmartRun_" + style, desc, signature, exceptions);
             }
         }
 
@@ -290,22 +290,6 @@ public class CommomClassVisitor extends ClassVisitor {
                 ov.visitMethodInsn(INVOKEVIRTUAL, newClassName, "action", "(" + "L" + packageClassName + ";" + desc
                         .substring(1), false);
 
-//                if (Flag_Static) {
-//                    ov.visitLdcInsn(Type.getType("L" + packageClassName + ";"));
-//                } else
-//                    ov.visitVarInsn(ALOAD, 0);
-//                ov.visitLdcInsn(name);
-//                ov.visitIntInsn(SIPUSH, num);
-//                ov.visitTypeInsn(ANEWARRAY, "java/lang/Object");
-//                if (num > 0) {
-//                    ov.visitInsn(DUP);
-//                    for (int i = 0; i < num; i++) {
-//                        ov.visitIntInsn(SIPUSH, i);
-//                        ov.visitVarInsn(ALOAD, Flag_Static ? i : i + 1);
-//                        ov.visitInsn(AASTORE);
-//                        if (i != num - 1) ov.visitInsn(DUP);
-//                    }
-//                }
 
                 if (!annotationData.isNewThread()) {
                     ov.visitLabel(l1);

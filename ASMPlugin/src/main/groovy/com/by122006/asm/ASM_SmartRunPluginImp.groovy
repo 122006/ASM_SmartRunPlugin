@@ -21,8 +21,15 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
 
 
         println "================SmartRun插件加载成功！=========="
+
+        File file=new File(project.getBuildDir().getPath()+"\\intermediates\\transforms\\ASM_SmartRunPluginImp");
+        //println project.getBuildDir().getPath()+"\\intermediates\\transforms\\ASM_SmartRunPluginImp"
+        file.delete();
+
+
         def android = project.extensions.findByType(AppExtension)
         android.registerTransform(this)
+
     }
 
 

@@ -33,8 +33,9 @@ public abstract class OScanner {
      */
     public void scan(File[] files) {
         for (File file : files) {
+
             String name = file.getName();
-            //System.out.println(name);
+            System.out.println("## scan "+name);
             //这里进行我们的处理 TODO
             if (name.endsWith(".class") && !name.startsWith("R$") &&
                     !"R.class".equals(name) && !"BuildConfig.class".equals(name) && !name.contains
@@ -43,7 +44,7 @@ public abstract class OScanner {
                 try {
                     classReader = new ClassReader(IOGroovyMethods.getBytes(new FileInputStream(file)));
                 } catch (FileNotFoundException e) {
-                    System.out.println("file not found");
+                    System.out.println("file not found :"+file);
                     continue;
                 }catch (Exception e){
                     e.printStackTrace();
