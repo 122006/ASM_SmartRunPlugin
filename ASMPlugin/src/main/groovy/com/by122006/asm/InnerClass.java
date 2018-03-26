@@ -1,5 +1,7 @@
 package com.by122006.asm;
 
+import com.by122006.asm.Scanners.NClassWriter;
+
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -94,7 +96,7 @@ public class InnerClass {
         }
         System.out.println("args.length : " + args.length);
 
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        NClassWriter cw = new NClassWriter(ClassWriter.COMPUTE_FRAMES);
         FieldVisitor fv;
         MethodVisitor mv;
         AnnotationVisitor av0;

@@ -6,6 +6,21 @@ package com.by122006.asm;
 
 public class AnnotationData {
 
+    String outAnnotation;
+    /**
+     * Style Async/Sync
+     */
+    boolean NewThread = false;
+    /**
+     * OutTime long
+     */
+    long OutTime = 2000l;
+    /**
+     * Result Skip/Wait
+     */
+    boolean Result = true;
+    boolean readFromAnnotation = false;
+
     public String getOutAnnotation() {
         return outAnnotation;
     }
@@ -42,9 +57,6 @@ public class AnnotationData {
         return this;
     }
 
-    String outAnnotation;
-
-
     @Override
     public String toString() {
         return "AnnotationData{" +
@@ -56,20 +68,9 @@ public class AnnotationData {
                 '}';
     }
 
-    /**
-     * Style Async/Sync
-     */
-    boolean NewThread = false;
-    /**
-     * OutTime long
-     */
-    long OutTime = 2000l;
-    /**
-     * Result Skip/Wait
-     */
-    boolean Result = true;
-    public boolean isUsed(){
-        return outAnnotation!=null&&outAnnotation.length()>0;
+    public boolean isUsed() {
+        return outAnnotation != null && outAnnotation.length() > 0 && (outAnnotation.toLowerCase().contains
+                ("uithread") || outAnnotation.toLowerCase().contains("bgthread"));
     }
 
     public boolean isReadFromAnnotation() {
@@ -80,6 +81,4 @@ public class AnnotationData {
         this.readFromAnnotation = readFromAnnotation;
         return this;
     }
-
-    boolean readFromAnnotation=false;
 }

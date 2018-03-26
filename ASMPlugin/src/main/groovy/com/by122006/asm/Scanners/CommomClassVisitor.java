@@ -5,6 +5,7 @@ import com.by122006.asm.AnnotationData;
 import com.by122006.asm.InnerClass;
 import com.by122006.asm.MethodInfo;
 
+import org.codehaus.groovy.runtime.metaclass.MethodHelper;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -167,7 +168,8 @@ public class CommomClassVisitor extends ClassVisitor {
                 String style = annotation.toLowerCase().contains("uithread") ? "UI" : "BG";
                 //重命名并开始注入
                 ov = mv;
-                mv = cv.visitMethod(access, name + "$SmartRun_" + style, desc, signature, exceptions);
+                System.out.println("access: "+Integer.toBinaryString(access)+"  -> "+Integer.toBinaryString((access |ACC_PROTECTED)&~ACC_PRIVATE));
+                mv = cv.visitMethod((access |ACC_PROTECTED)&(~ACC_PRIVATE), name + "$SmartRun_" + style, desc, signature, exceptions);
             }
         }
 
@@ -334,5 +336,6 @@ public class CommomClassVisitor extends ClassVisitor {
         }
 
     }
+
 
 }

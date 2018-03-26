@@ -9,6 +9,7 @@ import org.objectweb.asm.ClassWriter;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +33,6 @@ public abstract class OScanner {
      */
     public void scan(File[] files) {
         for (File file : files) {
-            String filename = file.getName();
             String name = file.getName();
             //System.out.println(name);
             //这里进行我们的处理 TODO
@@ -42,10 +42,13 @@ public abstract class OScanner {
                 ClassReader classReader = null;
                 try {
                     classReader = new ClassReader(IOGroovyMethods.getBytes(new FileInputStream(file)));
-                } catch (IOException e) {
+                } catch (FileNotFoundException e) {
+                    System.out.println("file not found");
+                    continue;
+                }catch (Exception e){
                     e.printStackTrace();
                 }
-                ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);
+                NClassWriter classWriter = new NClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);
                 String className = name.split(".class")[0];
                 String packageClassName=classReader.getClassName();
                 if (packageClassName==null)return;
