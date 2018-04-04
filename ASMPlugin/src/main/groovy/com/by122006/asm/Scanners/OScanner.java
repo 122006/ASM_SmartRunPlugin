@@ -1,6 +1,7 @@
 package com.by122006.asm.Scanners;
 
 import com.android.build.api.transform.DirectoryInput;
+import com.by122006.asm.NClassWriter;
 
 import org.codehaus.groovy.runtime.IOGroovyMethods;
 import org.objectweb.asm.ClassReader;

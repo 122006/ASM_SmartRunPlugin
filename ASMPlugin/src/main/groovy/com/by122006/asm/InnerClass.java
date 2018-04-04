@@ -1,7 +1,5 @@
 package com.by122006.asm;
 
-import com.by122006.asm.Scanners.NClassWriter;
-
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;

@@ -1,10 +1,10 @@
-package com.by122006.asm.Scanners;
+package com.by122006.asm;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
 /**
- * Created by admin on 2018/3/23.
+ * Created by 122006 on 2018/3/23.
  */
 
 public class NClassWriter extends ClassWriter {
