@@ -4,8 +4,8 @@ package com.by122006.asm.Scanners;
 import com.by122006.asm.AnnotationData;
 import com.by122006.asm.InnerClass;
 import com.by122006.asm.MethodInfo;
+import com.by122006.asm.Utils;
 
-import org.codehaus.groovy.runtime.metaclass.MethodHelper;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -20,11 +20,14 @@ import static com.by122006.asm.Utils.checkReturnStyle;
 import static org.objectweb.asm.Opcodes.ASM5;
 
 public class CommomClassVisitor extends ClassVisitor {
-    public String visitName;
+    private String visitName;
+    private int access;
     File file;
     int index = 0;
     ArrayList<String> interfaces = new ArrayList<String>();
+    ArrayList<String> methodNames = new ArrayList<>();
     private String packageClassName;
+
 
     public CommomClassVisitor(String packageClassName, File file, ClassVisitor classVisitor) {
         super(ASM5, classVisitor);
@@ -36,6 +39,7 @@ public class CommomClassVisitor extends ClassVisitor {
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         super.visit(version, access, name, signature, superName, interfaces);
         visitName = name;
+        this.access=access;
 //        if (interfaces != null && interfaces.length > 0);
 //            for (String str : interfaces) {
 //                if(OverAllClassVisitor.interfaceClassName.indexOf(str)>=0){
@@ -43,16 +47,14 @@ public class CommomClassVisitor extends ClassVisitor {
 //                }
 //            }
     }
-    ArrayList<String> methodNames =new ArrayList<>();
-
 
     @Override
     public MethodVisitor visitMethod(int access, String name, final String desc, String signature,
                                      String[] exceptions) {
         boolean change = false;
         AnnotationData annotationData = null;
-        if (methodNames.contains(name+desc)) return null;
-        if (name.equals("doCycleAction")||name.contains("$SmartRun_")) change = false;
+        if (methodNames.contains(name + desc)) return null;
+        if (name.equals("doCycleAction") || name.contains("$SmartRun_")) change = false;
         else {
             annotationData = getUsedAnnotationData(name, desc, null);
 //            if (annotationData == null) {
@@ -62,7 +64,7 @@ public class CommomClassVisitor extends ClassVisitor {
                 change = true;
             }
         }
-        methodNames.add(name+desc);
+        methodNames.add(name + desc);
 //        System.out.println(String.format("%s.%s 方法%s ", visitName, name, change + ""));
         if (change) {
             MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
@@ -127,7 +129,6 @@ public class CommomClassVisitor extends ClassVisitor {
     }
 
     public class MyAdviceAdapter extends AdviceAdapter {
-        String annotation = "";
         int access;
         String name;
         String desc;
@@ -165,11 +166,20 @@ public class CommomClassVisitor extends ClassVisitor {
             this.annotationData = annotationData;
             Flag_Static = (access & ACC_STATIC) != 0;
             if (!name.contains("$SmartRun_")) {
-                String style = annotation.toLowerCase().contains("uithread") ? "UI" : "BG";
+                String style = annotationData.getOutAnnotation().toLowerCase().contains("uithread") ? "UI" : "BG";
                 //重命名并开始注入
                 ov = mv;
-                System.out.println("access: "+Integer.toBinaryString(access)+"  -> "+Integer.toBinaryString((access |ACC_PROTECTED)&~ACC_PRIVATE&~ACC_PUBLIC));
-                mv = cv.visitMethod((access |ACC_PROTECTED)&(~ACC_PRIVATE)&(~ACC_PUBLIC), name + "$SmartRun_" + style, desc, signature, exceptions);
+
+                if (Utils.checkAccess(CommomClassVisitor.this.access, ACC_INTERFACE)) {
+                    System.out.println("access: ACC_INTERFACE");
+
+                } else
+                    System.out.println("access: " + Integer.toBinaryString(access) + "  -> " + Integer.toBinaryString
+                            (access=(access | ACC_PUBLIC) & ~ACC_PRIVATE & ~ACC_PROTECTED));
+
+                
+                mv = cv.visitMethod(access, name + "$SmartRun_" +
+                        style, desc, signature, exceptions);
             }
         }
 
@@ -200,7 +210,7 @@ public class CommomClassVisitor extends ClassVisitor {
         @Override
         public void visitEnd() {
             if (ov != null) {
-                String style = annotation.toLowerCase().contains("uithread") ? "UI" : "BG";
+                String style = annotationData.getOutAnnotation().toLowerCase().contains("uithread") ? "UI" : "BG";
 
                 String arg = desc.substring(1, desc.lastIndexOf(")"));
                 if (arg.endsWith(";")) arg = arg.substring(0, arg.length());
@@ -289,7 +299,6 @@ public class CommomClassVisitor extends ClassVisitor {
                 }
                 ov.visitMethodInsn(INVOKEVIRTUAL, newClassName, "action", "(" + "L" + packageClassName + ";" + desc
                         .substring(1), false);
-
 
                 if (!annotationData.isNewThread()) {
                     ov.visitLabel(l1);

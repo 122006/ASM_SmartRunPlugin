@@ -173,7 +173,7 @@ public class OverAllClassVisitor extends ClassVisitor {
                         if (s1.equals("toBgThread"))
                             annotationData.setOutAnnotation("Lcom/by122006/asm_smartrunpluginimp/Interface/BGThread;");
                         else if (s1.equals("toUiThread"))
-                            annotationData.setOutAnnotation(":com/by122006/asm_smartrunpluginimp/Interface/UIThread;");
+                            annotationData.setOutAnnotation("Lcom/by122006/asm_smartrunpluginimp/Interface/UIThread;");
                     }
                     annotationData.setReadFromAnnotation(false);
                 }

@@ -64,38 +64,6 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
         inputs.each { TransformInput input ->
             //遍历input里边的DirectoryInput
             input.directoryInputs.each {
-                    //                DirectoryInput directoryInput ->
-//
-////                    println '//PluginImp find file:' +directoryInput.file.name
-//                    //是否是目录
-//                    if (directoryInput.file.isDirectory()) {
-//                        //遍历目录
-//                        directoryInput.file.eachFileRecurse {
-//                            File file ->
-//                                def filename = file.name;
-//                                def name = file.name
-//                                //这里进行我们的处理 TODO
-//                                if (name.endsWith(".class") && !name.startsWith("R\$") &&
-//                                        !"R.class".equals(name) && !"BuildConfig.class".equals(name)&& !name.contains("R\$SmartRun_")) {
-//                                    ClassReader classReader = new ClassReader(file.bytes)
-//                                    ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES)
-//                                    def className = name.split(".class")[0]
-//                                    ClassVisitor cv = new SmartRunClassVisitor(className,classWriter);
-//                                    cv.setFile(file)
-//                                    cv.setPackageClassName(classReader.getClassName())
-//                                    classReader.accept(cv, EXPAND_FRAMES)
-//
-//                                    byte[] code = classWriter.toByteArray()
-//                                    FileOutputStream fos = new FileOutputStream(
-//                                            file.parentFile.absolutePath + File.separator + name)
-//                                    fos.write(code)
-//                                    fos.close()
-//
-//                                }
-////                                println '//PluginImp find file:' + file.getAbsolutePath()
-//                        }
-//                    }
-
                 DirectoryInput directoryInput ->
                     System.out.println("************ OverAllScanner start **********")
                     new OverAllScanner().scan(directoryInput)
