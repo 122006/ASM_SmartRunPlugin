@@ -191,7 +191,7 @@ public class InnerClass {
                 Label l0 = new Label();
                 if (threadStyle.equals("BG")) {
                     mv.visitMethodInsn(INVOKESTATIC, "com/by122006/asm_smartrunpluginimp/Utils/ThreadUtils",
-                            "isUIThread", "()Z", false);
+                            "isBGThread", "()Z", false);
                     mv.visitJumpInsn(IFEQ, l0);
                 }
                 mv.visitVarInsn(ALOAD, 0);
@@ -219,7 +219,7 @@ public class InnerClass {
                 Label l3 = new Label();
                 if (threadStyle.equals("BG")) {
                     mv.visitMethodInsn(INVOKESTATIC, "com/by122006/asm_smartrunpluginimp/Utils/ThreadUtils",
-                            "isUIThread", "()Z", false);
+                            "isBGThread", "()Z", false);
                     mv.visitJumpInsn(IFEQ, l3);
                 }
 
