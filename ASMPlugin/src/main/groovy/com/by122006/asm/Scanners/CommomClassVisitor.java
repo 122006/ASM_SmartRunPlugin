@@ -13,6 +13,8 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.annotation.Nullable;
 
@@ -20,12 +22,12 @@ import static com.by122006.asm.Utils.checkReturnStyle;
 import static org.objectweb.asm.Opcodes.ASM5;
 
 public class CommomClassVisitor extends ClassVisitor {
-    private String visitName;
-    private int access;
     File file;
     int index = 0;
     ArrayList<String> interfaces = new ArrayList<String>();
     ArrayList<String> methodNames = new ArrayList<>();
+    private String visitName;
+    private int access;
     private String packageClassName;
 
 
@@ -39,7 +41,7 @@ public class CommomClassVisitor extends ClassVisitor {
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         super.visit(version, access, name, signature, superName, interfaces);
         visitName = name;
-        this.access=access;
+        this.access = access;
 //        if (interfaces != null && interfaces.length > 0);
 //            for (String str : interfaces) {
 //                if(OverAllClassVisitor.interfaceClassName.indexOf(str)>=0){
@@ -175,9 +177,8 @@ public class CommomClassVisitor extends ClassVisitor {
 
                 } else
                     System.out.println("access: " + Integer.toBinaryString(access) + "  -> " + Integer.toBinaryString
-                            (access=(access | ACC_PUBLIC) & ~ACC_PRIVATE & ~ACC_PROTECTED));
+                            (access = (access | ACC_PUBLIC) & ~ACC_PRIVATE & ~ACC_PROTECTED));
 
-                
                 mv = cv.visitMethod(access, name + "$SmartRun_" +
                         style, desc, signature, exceptions);
             }
@@ -215,10 +216,21 @@ public class CommomClassVisitor extends ClassVisitor {
                 String arg = desc.substring(1, desc.lastIndexOf(")"));
                 if (arg.endsWith(";")) arg = arg.substring(0, arg.length());
                 String[] args = arg.split(";");
+                ArrayList<String> ls= new ArrayList<>();
+                Collections.addAll(ls,args);
+                ArrayList<String> ls2=new ArrayList<>();
+                for(String s :ls){
+                    if(s.startsWith("L")&&s.length()>1){
+                        ls2.add(s);
+                    }else{
+                        ls2.add(String.valueOf(s.charAt(0)));
+                        ls2.add(s.substring(1));
+                    }
+                }
+                args=ls2.toArray(new String[]{});
                 if (args.length == 1 && args[0].length() == 0) args = new String[]{};
                 for (int i = 0; i < args.length; i++) {
                     args[i] += args[i].length() == 1 ? "" : ";";
-
                 }
 
                 int num = args.length;
