@@ -85,6 +85,7 @@ public class InnerClass {
 
         System.out.println("returnStyle : " + returnStyle);
         //System.out.println("packageClassName : " + packageClassName);
+
         String arg = desc.substring(1, desc.lastIndexOf(")"));
         if (arg.endsWith(";")) arg = arg.substring(0, arg.length());
         String[] args = arg.split(";");
@@ -99,6 +100,7 @@ public class InnerClass {
                 ls2.add(s.substring(1));
             }
         }
+        args=ls2.toArray(new String[]{});
         if (args.length == 1 && args[0].length() == 0) args = new String[]{};
         for (int i = 0; i < args.length; i++) {
             args[i] += args[i].length() == 1 ? "" : ";";
