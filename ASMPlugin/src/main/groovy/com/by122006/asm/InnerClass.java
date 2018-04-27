@@ -85,7 +85,6 @@ public class InnerClass {
 
         System.out.println("returnStyle : " + returnStyle);
         //System.out.println("packageClassName : " + packageClassName);
-
         String arg = desc.substring(1, desc.lastIndexOf(")"));
         if (arg.endsWith(";")) arg = arg.substring(0, arg.length());
         String[] args = arg.split(";");
