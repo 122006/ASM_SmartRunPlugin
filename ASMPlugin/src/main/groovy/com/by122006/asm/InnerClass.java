@@ -88,24 +88,7 @@ public class InnerClass {
 
         String arg = desc.substring(1, desc.lastIndexOf(")"));
         if (arg.endsWith(";")) arg = arg.substring(0, arg.length());
-        String[] args = arg.split(";");
-        ArrayList<String> ls= new ArrayList<>();
-        Collections.addAll(ls,args);
-        ArrayList<String> ls2=new ArrayList<>();
-        for(String s :ls){
-            if(s.startsWith("L")&&s.length()>1){
-                ls2.add(s);
-            }else{
-                ls2.add(String.valueOf(s.charAt(0)));
-                ls2.add(s.substring(1));
-            }
-        }
-        args=ls2.toArray(new String[]{});
-        if (args.length == 1 && args[0].length() == 0) args = new String[]{};
-        for (int i = 0; i < args.length; i++) {
-            args[i] += args[i].length() == 1 ? "" : ";";
-            System.out.println(i + " : " + args[i]);
-        }
+        String[] args = Utils.splitObjsArg(arg);
         System.out.println("args.length : " + args.length);
 
         NClassWriter cw = new NClassWriter(ClassWriter.COMPUTE_FRAMES);
