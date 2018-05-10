@@ -5,6 +5,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -109,6 +110,8 @@ public class InnerClass {
             fv = cw.visitField(ACC_PRIVATE, "result", returnStyle, null, null);
             fv.visitEnd();
         }
+        fv = cw.visitField(ACC_PRIVATE, "result", Type.getDescriptor(Throwable.class), null, null);
+        fv.visitEnd();
 
         fv = cw.visitField(ACC_PRIVATE, "obj", oObjType, null, null);
         fv.visitEnd();
@@ -129,6 +132,7 @@ public class InnerClass {
         {
             mv = cw.visitMethod(ACC_PUBLIC, "run", "()V", null, null);
             mv.visitCode();
+            //todo save error
             if (needReturn) {
                 mv.visitVarInsn(ALOAD, 0);
             }
@@ -150,6 +154,7 @@ public class InnerClass {
             if (needReturn) {
                 mv.visitFieldInsn(PUTFIELD, packageClassName, "result", returnStyle);
             }
+            //todo save throw end
             if (result) {
                 Label l0 = new Label();
                 if (threadStyle.equals("BG")) {

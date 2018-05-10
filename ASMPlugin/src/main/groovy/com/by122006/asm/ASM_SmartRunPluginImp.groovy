@@ -78,9 +78,6 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
 
             println '===============jarInputs==============='
             input.jarInputs.each { JarInput jarInput ->
-                /**
-                 * 重名名输出文件,因为可能同名,会覆盖
-                 */
                 def jarName = jarInput.name
                 def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
                 if (jarName.endsWith(".jar")) {

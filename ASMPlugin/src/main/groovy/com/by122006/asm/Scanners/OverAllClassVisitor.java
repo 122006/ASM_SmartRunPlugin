@@ -131,16 +131,18 @@ public class OverAllClassVisitor extends ClassVisitor {
                     .toLowerCase().contains("bgthread"))) {
                 g = true;
             }
-            annotationData = new AnnotationData();
-            annotationData.setOutAnnotation(annotation);
-            annotationData.setReadFromAnnotation(true);
             if (g) {
+                annotationData = new AnnotationData();
+                annotationData.setOutAnnotation(annotation);
+                annotationData.setReadFromAnnotation(true);
                 System.out.println("!!!!" + annotation);
                 System.out.println(String.format("access=%d,name=%s,desc=%s,signature=%s", access, name, desc,
                         signature));
                 ifsave = true;
+
+                return new MyAnnotationVisitor(ASM5, super.visitAnnotation(s, b), annotationData);
             }
-            return new MyAnnotationVisitor(ASM5, super.visitAnnotation(s, b), annotationData);
+            return super.visitAnnotation(s,b);
 
         }
 
