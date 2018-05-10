@@ -18,7 +18,7 @@ public class AnnotationData {
     /**
      * Result Skip/Wait
      */
-    boolean Result = true;
+    boolean Result = false;
     boolean readFromAnnotation = false;
 
     public String getOutAnnotation() {
