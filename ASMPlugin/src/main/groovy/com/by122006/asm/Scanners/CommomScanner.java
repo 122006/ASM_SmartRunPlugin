@@ -30,4 +30,8 @@ public class CommomScanner extends OScanner {
         }
         scan(files);
     }
+
+    public static void init() {
+        CommomClassVisitor.init();
+    }
 }

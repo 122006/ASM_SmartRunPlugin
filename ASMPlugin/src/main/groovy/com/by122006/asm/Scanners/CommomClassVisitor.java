@@ -30,6 +30,8 @@ public class CommomClassVisitor extends ClassVisitor {
     private int access;
     private String packageClassName;
 
+    public static void init() {
+    }
 
     public CommomClassVisitor(String packageClassName, File file, ClassVisitor classVisitor) {
         super(ASM5, classVisitor);
@@ -129,6 +131,8 @@ public class CommomClassVisitor extends ClassVisitor {
 
 
     }
+
+
 
     public class MyAdviceAdapter extends AdviceAdapter {
         int access;

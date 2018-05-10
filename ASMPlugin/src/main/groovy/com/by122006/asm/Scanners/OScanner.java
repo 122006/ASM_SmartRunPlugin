@@ -29,6 +29,7 @@ public abstract class OScanner {
 //     */
 //    public abstract void setDirectoryInput(File directoryInput);
 
+
     /**
      * 开始扫描
      */

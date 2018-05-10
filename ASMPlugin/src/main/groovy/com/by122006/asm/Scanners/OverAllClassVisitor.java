@@ -45,6 +45,15 @@ public class OverAllClassVisitor extends ClassVisitor {
     private String packageClassName;
     private File file;
 
+
+    public static void init() {
+        methodInfos.clear();
+        classExtends.clear();
+        interfaceFilePaths.clear();
+        classFilePaths.clear();
+    }
+
+
     public OverAllClassVisitor(String packageClassName, File file, ClassVisitor classVisitor) {
         super(ASM5, classVisitor);
         this.file = file;
@@ -94,6 +103,7 @@ public class OverAllClassVisitor extends ClassVisitor {
         return super.visitMethod(access, name, desc, signature, exceptions);
 
     }
+
 
     public class MyAdviceAdapter extends MethodVisitor {
         String annotation = "";

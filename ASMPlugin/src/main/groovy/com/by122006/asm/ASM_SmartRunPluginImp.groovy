@@ -4,6 +4,7 @@ import com.android.build.api.transform.*
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.pipeline.TransformManager
 import com.by122006.asm.Scanners.CommomScanner
+import com.by122006.asm.Scanners.OverAllClassVisitor
 import com.by122006.asm.Scanners.OverAllScanner
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
@@ -65,6 +66,9 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
             //遍历input里边的DirectoryInput
             input.directoryInputs.each {
                 DirectoryInput directoryInput ->
+                    System.out.println("************ Scanners init **********")
+                    OverAllScanner.init();
+                    CommomScanner.init();
                     System.out.println("************ OverAllScanner start **********")
                     new OverAllScanner().scan(directoryInput)
                     System.out.println("************ CommomScanner start **********")

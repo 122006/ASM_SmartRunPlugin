@@ -23,4 +23,8 @@ public class OverAllScanner extends OScanner {
     public ClassVisitor defineClassVisitor(String packageClassName,File file, ClassWriter classWriter) {
         return new OverAllClassVisitor(packageClassName,file,classWriter);
     }
+    public static void init() {
+        OverAllClassVisitor.init();
+    }
+
 }
