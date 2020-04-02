@@ -18,7 +18,7 @@ public @interface BGThread {
      */
     String Async ="Async";
     /**
-     * 同为后台线程，将会直接执行修饰方法
+     * 同为后台线程，将会直接执行修饰方法(会卡住原有后台线程)（优化用）
      */
     String Sync ="Sync";
     /**

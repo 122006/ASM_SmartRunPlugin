@@ -72,7 +72,7 @@ public class InnerClass {
      */
     public static String create(File file, String oPackageClassName, String desc, String threadStyle, boolean isStatic,
                                 String oObjType, String doMethodName, boolean newThread, long outTime, boolean
-                                        result) {
+                                        result) throws Exception{
         int index=Utils.getClassHaveIndexInDir(file);
         index++;
         System.out.println(file.getAbsolutePath());
@@ -110,8 +110,8 @@ public class InnerClass {
             fv = cw.visitField(ACC_PRIVATE, "result", returnStyle, null, null);
             fv.visitEnd();
         }
-        fv = cw.visitField(ACC_PRIVATE, "result", Type.getDescriptor(Throwable.class), null, null);
-        fv.visitEnd();
+//        fv = cw.visitField(ACC_PRIVATE, "result", Type.getDescriptor(Throwable.class), null, null);
+//        fv.visitEnd();
 
         fv = cw.visitField(ACC_PRIVATE, "obj", oObjType, null, null);
         fv.visitEnd();

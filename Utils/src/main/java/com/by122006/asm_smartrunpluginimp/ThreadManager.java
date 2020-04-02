@@ -9,6 +9,8 @@ import com.by122006.asm_smartrunpluginimp.Utils.ThreadUtils;
 public class ThreadManager {
     public static ThreadManager instance = null;
 
+    static NewBgThreadAction newBgThreadAction;
+
     private ThreadManager() {
 
     }
@@ -33,8 +35,22 @@ public class ThreadManager {
     }
 
     public static void postBGThread(Runnable runnable) {
-        new Thread(runnable).start();
+        if (newBgThreadAction == null)
+            new Thread(runnable).start();
+        else newBgThreadAction.post(runnable);
     }
 
+    /**
+     * 设置需要使用的线程池方法
+     *
+     */
+    public static void setNewBgThreadAction(NewBgThreadAction fNewBgThreadAction) {
+        newBgThreadAction = fNewBgThreadAction;
+    }
+
+
+    public interface NewBgThreadAction {
+        void post(Runnable runnable);
+    }
 
 }

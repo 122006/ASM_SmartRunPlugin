@@ -2,6 +2,7 @@ package com.by122006.asm.Scanners;
 
 import com.android.build.api.transform.DirectoryInput;
 import com.by122006.asm.NClassWriter;
+import com.by122006.asm.Utils;
 
 import org.codehaus.groovy.runtime.IOGroovyMethods;
 import org.objectweb.asm.ClassReader;
@@ -37,7 +38,7 @@ public abstract class OScanner {
         for (File file : files) {
 
             String name = file.getName();
-            System.out.println("## scan "+name);
+//            System.out.println("## scan "+name);
             //这里进行我们的处理 TODO
             if (name.endsWith(".class") && !name.startsWith("R$") &&
                     !"R.class".equals(name) && !"BuildConfig.class".equals(name) && !name.contains
@@ -51,11 +52,11 @@ public abstract class OScanner {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                NClassWriter classWriter = new NClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);
-                String className = name.split(".class")[0];
-                String packageClassName=classReader.getClassName();
-                if (packageClassName==null)return;
                 try {
+                    NClassWriter classWriter = new NClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);
+                    String className = name.split(".class")[0];
+                    String packageClassName=classReader.getClassName();
+                    if (packageClassName==null)return;
                     //System.out.println("packageClassName : "+packageClassName);
                     ClassVisitor cv = defineClassVisitor(packageClassName, file, classWriter);
                     classReader.accept(cv, EXPAND_FRAMES);
@@ -69,10 +70,12 @@ public abstract class OScanner {
                             fos.close();
                         } catch (IOException e) {
                             e.printStackTrace();
+                            System.err.println("!!!Error "+ Utils.getExceptionDetails(e));
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    System.err.println("!!!Error "+ Utils.getExceptionDetails(e));
                 }
 
             }

@@ -49,7 +49,18 @@ public class Utils {
         }
         return i;
     }
+    public static String getExceptionDetails(Exception e) {
+        StringBuilder s = new StringBuilder();
+        Throwable ourCause = e.getCause();
+        if (ourCause != null)
+            s.append(ourCause);
 
+        StackTraceElement[] trace = e.getStackTrace();
+        for (StackTraceElement traceElement : trace)
+            s.append("\nat " + traceElement);
+
+        return s.toString();
+    }
     /**
      * 检查方法access
      *
@@ -61,6 +72,10 @@ public class Utils {
         return (access & acc) != 0;
     }
 
+    public static void main(String[] str){
+        System.out.println(splitObjsArg("Landroid/app/Activity;Ljava/lang/String;[Ljava/lang/String;").length);
+    }
+
 
     public static String[] splitObjsArg(String str) {
         String[] args = str.split(";");
@@ -70,7 +85,7 @@ public class Utils {
         for (String s : ls) {
             if (s.length() == 0) continue;
             String rest=s;
-            while (!rest.startsWith("L")&&rest.length()>0) {
+            while (!rest.startsWith("L")&&!rest.startsWith("[")&&rest.length()>0) {
                 ls2.add(String.valueOf(rest.charAt(0)));
                 rest=rest.substring(1);
             }

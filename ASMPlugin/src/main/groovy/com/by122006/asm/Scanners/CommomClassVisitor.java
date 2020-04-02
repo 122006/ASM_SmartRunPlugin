@@ -69,7 +69,7 @@ public class CommomClassVisitor extends ClassVisitor {
             }
         }
         methodNames.add(name + desc);
-//        System.out.println(String.format("%s.%s 方法%s ", visitName, name, change + ""));
+//        System.out.println(String.format("%s.%s 方法 %s ", visitName, name, change + ""));
         if (change) {
             MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
             System.out.println(String.format("%s.%s 方法%s ", visitName, name, annotationData.toString()));
@@ -115,11 +115,12 @@ public class CommomClassVisitor extends ClassVisitor {
         for (int i = 0; i < checkList.size(); i++) {
             String otherName = checkList.get(i);
 //            if (i>0||visitParentClassName!=null)System.out.println("visitParentClassName "+otherName);
-            if (OverAllClassVisitor.methodInfos.get(otherName) != null)
-                for (MethodInfo methodInfo : OverAllClassVisitor.methodInfos.get(otherName)) {
+            final ArrayList<MethodInfo> methodInfos = OverAllClassVisitor.methodInfos.get(otherName);
+            if (methodInfos != null)
+                for (MethodInfo methodInfo : methodInfos) {
                     if (methodInfo.name.equals(methodName) && methodInfo.desc.equals(methodDesc)) {
                         if (methodInfo.annotations != null && methodInfo.annotations.isUsed()) {
-                            System.out.println(String.format("use %s.%s()", otherName, methodInfo.name));
+                            System.out.println(String.format("use %s.%s() because : %s", otherName, methodInfo.name,methodInfo.annotations.toString()));
                             return methodInfo.annotations;
                         }
                         break;
@@ -261,11 +262,19 @@ public class CommomClassVisitor extends ClassVisitor {
                     ov.visitLabel(l0);
                     ov.visitFrame(F_SAME, 0, null, 0, null);
                 }
-                String newClassName = packageClassName.substring(0, packageClassName.lastIndexOf("/") + 1) +
-                        InnerClass.create(file, packageClassName, desc, style, Flag_Static, "L" + packageClassName +
-                                        ";",
-                                name + "$SmartRun_" + style, annotationData.isNewThread(), annotationData.getOutTime
-                                        (), annotationData.isResult());
+                String newClassName = null;
+                try {
+                    newClassName = packageClassName.substring(0, packageClassName.lastIndexOf("/") + 1) +
+                            InnerClass.create(file, packageClassName, desc, style, Flag_Static, "L" + packageClassName +
+                                            ";",
+                                    name + "$SmartRun_" + style, annotationData.isNewThread(), annotationData.getOutTime
+                                            (), annotationData.isResult());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ov.visitMaxs(20 + num, 20 + num);
+                    ov.visitEnd();
+                    return;
+                }
                 visitInnerClass(newClassName, null, null, 0);
                 System.out.println("newClassName:" + newClassName);
 

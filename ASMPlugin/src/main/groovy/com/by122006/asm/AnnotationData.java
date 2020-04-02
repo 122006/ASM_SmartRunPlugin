@@ -69,8 +69,13 @@ public class AnnotationData {
     }
 
     public boolean isUsed() {
-        return outAnnotation != null && outAnnotation.length() > 0 && (outAnnotation.toLowerCase().contains
-                ("uithread") || outAnnotation.toLowerCase().contains("bgthread"));
+        final boolean b = outAnnotation != null && outAnnotation.length() > 0
+                && (
+                outAnnotation.toLowerCase().contains("uithread")
+                        || outAnnotation.toLowerCase().contains("bgthread")
+        );
+//        System.out.println(String.format("annotation check ：%s %s",String.valueOf(outAnnotation),String.valueOf(b) ));
+        return b;
     }
 
     public boolean isReadFromAnnotation() {

@@ -65,7 +65,7 @@ public class OverAllClassVisitor extends ClassVisitor {
 
         if(!classFilePaths.contains(file.getPath()))classFilePaths.add(file.getPath());else return;
 
-        System.out.println("filename : " + name + " access : " + Integer.toBinaryString(access));
+//        System.out.println("filename : " + name + " access : " + Integer.toBinaryString(access));
 
         visitName = name;
         ArrayList<String> list = new ArrayList<>();
@@ -91,6 +91,7 @@ public class OverAllClassVisitor extends ClassVisitor {
     @Override
     public MethodVisitor visitMethod(int access, String name, final String desc, String signature,
                                      String[] exceptions) {
+
         try {
             MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
             MyAdviceAdapter av;
