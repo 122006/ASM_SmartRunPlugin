@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import javax.annotation.Nullable;
 
+import static com.by122006.asm.Configure.UIThreadClassName;
 import static com.by122006.asm.Utils.checkReturnStyle;
 import static org.objectweb.asm.Opcodes.ASM5;
 
@@ -173,7 +174,7 @@ public class CommomClassVisitor extends ClassVisitor {
             this.annotationData = annotationData;
             Flag_Static = (access & ACC_STATIC) != 0;
             if (!name.contains("$SmartRun_")) {
-                String style = annotationData.getOutAnnotation().toLowerCase().contains("uithread") ? "UI" : "BG";
+                String style = annotationData.getOutAnnotation().contains(UIThreadClassName) ? "UI" : "BG";
                 //重命名并开始注入
                 ov = mv;
 
@@ -216,7 +217,7 @@ public class CommomClassVisitor extends ClassVisitor {
         @Override
         public void visitEnd() {
             if (ov != null) {
-                String style = annotationData.getOutAnnotation().toLowerCase().contains("uithread") ? "UI" : "BG";
+                String style = annotationData.getOutAnnotation().contains(UIThreadClassName) ? "UI" : "BG";
 
                 String arg = desc.substring(1, desc.lastIndexOf(")"));
                 if (arg.endsWith(";")) arg = arg.substring(0, arg.length());

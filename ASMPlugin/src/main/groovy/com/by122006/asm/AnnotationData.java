@@ -1,5 +1,8 @@
 package com.by122006.asm;
 
+import static com.by122006.asm.Configure.BGThreadClassName;
+import static com.by122006.asm.Configure.UIThreadClassName;
+
 /**
  * Created by 122006 on 2018/3/6.
  */
@@ -71,8 +74,8 @@ public class AnnotationData {
     public boolean isUsed() {
         final boolean b = outAnnotation != null && outAnnotation.length() > 0
                 && (
-                outAnnotation.toLowerCase().contains("uithread")
-                        || outAnnotation.toLowerCase().contains("bgthread")
+                outAnnotation.contains(BGThreadClassName)
+                        || outAnnotation.contains(UIThreadClassName)
         );
 //        System.out.println(String.format("annotation check ：%s %s",String.valueOf(outAnnotation),String.valueOf(b) ));
         return b;

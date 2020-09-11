@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static com.by122006.asm.Configure.BGThreadClassName;
+import static com.by122006.asm.Configure.UIThreadClassName;
 import static org.objectweb.asm.Opcodes.ACC_INTERFACE;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 import static org.objectweb.asm.Opcodes.ASM5;
@@ -138,8 +140,7 @@ public class OverAllClassVisitor extends ClassVisitor {
             }
             boolean g = false;
 
-            if (!name.contains("$SmartRun_") && (annotation.toLowerCase().contains("uithread") || annotation
-                    .toLowerCase().contains("bgthread"))) {
+            if (!name.contains("$SmartRun_") && (annotation.contains(UIThreadClassName) || annotation.contains(BGThreadClassName))) {
                 g = true;
             }
             if (g) {

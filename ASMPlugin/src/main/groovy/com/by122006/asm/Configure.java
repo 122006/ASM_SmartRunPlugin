@@ -15,6 +15,9 @@ import java.net.URL;
 public class Configure {
     final static String FileName="SmartRun.Configure";
 
+    public final static String UIThreadClassName="Lcom/by122006/asm_smartrunpluginimp/Interface/UIThread;";
+    public final static String BGThreadClassName="Lcom/by122006/asm_smartrunpluginimp/Interface/BGThread;";
+
     private static void getDataFromText(){
         URL url=Configure.class.getResource("/");
         String fileStr=url.getFile();
