@@ -12,7 +12,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 
-class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
+class ASM_SmartRunPluginImpl extends Transform implements Plugin<Project> {
     void apply(Project project) {
         /*project.task('testTask') << {
              println "Hello gradle plugin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -24,7 +24,7 @@ class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
 
         println "================SmartRun插件加载成功！=========="
 
-        File file=new File(project.getBuildDir().getPath()+"\\intermediates\\transforms\\ASM_SmartRunPluginImp");
+        File file=new File(project.getBuildDir().getPath()+"\\intermediates\\transforms\\smartRun");
         //println project.getBuildDir().getPath()+"\\intermediates\\transforms\\ASM_SmartRunPluginImp"
         file.delete();
 
@@ -37,7 +37,7 @@ class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
 
     @Override
     public String getName() {
-        return "ASM_SmartRunPluginImp";
+        return "smartRun";
     }
 
     @Override
@@ -58,7 +58,7 @@ class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
     @Override
     void transform(Context context, Collection<TransformInput> inputs, Collection<TransformInput> referencedInputs,
                    TransformOutputProvider outputProvider, boolean isIncremental) throws IOException, TransformException, InterruptedException {
-        LogUtil.println("===============ASMSmartRunPluginImp visit start===============");
+        LogUtil.println("===============ASM_SmartRunPluginImpl visit start===============");
         long startTime = System.currentTimeMillis()
         //遍历inputs里的TransformInput
 //        println isIncremental
@@ -81,7 +81,7 @@ class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
                     FileUtils.copyDirectory(directoryInput.file, dest)
             }
 
-            println '===============jarInputs==============='
+//            println '===============jarInputs==============='
             input.jarInputs.each { JarInput jarInput ->
                 def jarName = jarInput.name
                 def md5Name = DigestUtils.md5Hex(jarInput.file.getAbsolutePath())
@@ -100,7 +100,7 @@ class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
 
         }
         long time = System.currentTimeMillis() - startTime ;
-        println '//===============ASMSmartRunPluginImp visit end== 用时' + time + 'ms' +
+        println '//===============ASM_SmartRunPluginImpl visit end== 用时' + time + 'ms' +
                 ' =======//'
 
     }

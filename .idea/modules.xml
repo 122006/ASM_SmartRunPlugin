@@ -3,8 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ASMPlugin/ASMPlugin.iml" filepath="$PROJECT_DIR$/ASMPlugin/ASMPlugin.iml" />
-      <module fileurl="file://E:\android\ASM_SmartRunPluginImp\ASMPlugin\ASMSmartRunPlugin.iml" filepath="E:\android\ASM_SmartRunPluginImp\ASMPlugin\ASMSmartRunPlugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ASM_SmartRunPluginImp.iml" filepath="$PROJECT_DIR$/ASM_SmartRunPluginImp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ASM_SmartRunPlugin.iml" filepath="$PROJECT_DIR$/.idea/modules/ASM_SmartRunPlugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ASMPlugin/ASM_SmartRunPlugin.ASMPlugin.iml" filepath="$PROJECT_DIR$/.idea/modules/ASMPlugin/ASM_SmartRunPlugin.ASMPlugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Utils/ASM_SmartRunPlugin.Utils.iml" filepath="$PROJECT_DIR$/.idea/modules/Utils/ASM_SmartRunPlugin.Utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ASM_SmartRunPlugin.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ASM_SmartRunPlugin.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/Utils/Utils.iml" filepath="$PROJECT_DIR$/Utils/Utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

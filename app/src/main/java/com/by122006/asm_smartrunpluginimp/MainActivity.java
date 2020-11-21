@@ -1,16 +1,10 @@
 package com.by122006.asm_smartrunpluginimp;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.UiThread;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import com.by122006.asm_smartrunpluginimp.Interface.BGThread;
-import com.by122006.asm_smartrunpluginimp.Utils.ThreadUtils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
