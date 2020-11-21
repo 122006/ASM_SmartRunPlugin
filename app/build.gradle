@@ -1,4 +1,7 @@
+def file = new File(uri('../repo').path+"/com/by122006/SmartRunPlugin/ASMPlugin")
+
 apply plugin: 'com.android.application'
+if (file.exists())
 apply plugin: 'smartrun'
 
 
