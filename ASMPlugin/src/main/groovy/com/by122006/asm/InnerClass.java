@@ -1,16 +1,12 @@
 package com.by122006.asm;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static com.by122006.asm.Utils.checkReturnStyle;
@@ -72,10 +68,10 @@ public class InnerClass {
      */
     public static String create(File file, String oPackageClassName, String desc, String threadStyle, boolean isStatic,
                                 String oObjType, String doMethodName, boolean newThread, long outTime, boolean
-                                        result) throws Exception{
-        int index=Utils.getClassHaveIndexInDir(file);
+                                        result) throws Exception {
+        int index = Utils.getClassHaveIndexInDir(file);
         index++;
-        System.out.println(file.getAbsolutePath());
+        LogUtil.println(file.getAbsolutePath());
         String allClassPath = file.getAbsolutePath().replace(".class", "") + "$" + doMethodName.replace("$",
                 "_") + "_" + index + ".class";
         String className = allClassPath.substring(allClassPath.lastIndexOf("\\") + 1, allClassPath.lastIndexOf("."));
@@ -84,13 +80,13 @@ public class InnerClass {
         String oObjClassName = oObjType.substring(1, oObjType.length() - 1);
         String packageClassName = oPackageClassName.substring(0, oPackageClassName.lastIndexOf("/") + 1) + className;
 
-        System.out.println("returnStyle : " + returnStyle);
-        //System.out.println("packageClassName : " + packageClassName);
+        LogUtil.println("returnStyle : " + returnStyle);
+        //LogUtil.println("packageClassName : " + packageClassName);
 
         String arg = desc.substring(1, desc.lastIndexOf(")"));
         if (arg.endsWith(";")) arg = arg.substring(0, arg.length());
         String[] args = Utils.splitObjsArg(arg);
-        System.out.println("args.length : " + args.length);
+        LogUtil.println("args.length : " + args.length);
 
         NClassWriter cw = new NClassWriter(ClassWriter.COMPUTE_FRAMES);
         FieldVisitor fv;
@@ -134,7 +130,7 @@ public class InnerClass {
             mv.visitCode();
             //todo save error
             if (needReturn) {
-                mv.visitVarInsn(ALOAD, 0);
+                mv.visitVarInsn(Opcodes.ALOAD, 0);
             }
             if (isStatic) {
                 for (int i = 0; i < args.length; i++) {
@@ -182,10 +178,10 @@ public class InnerClass {
             mv.visitVarInsn(ALOAD, 0);
             mv.visitVarInsn(ALOAD, 1);
             mv.visitFieldInsn(PUTFIELD, packageClassName, "obj", oObjType);
-
+            int argsSpaceIndex=2;
             for (int i = 0; i < args.length; i++) {
                 mv.visitVarInsn(ALOAD, 0);
-                mv.visitVarInsn(ALOAD, i + 2);
+                argsSpaceIndex=Utils.visitVarInsn(mv,args[i],argsSpaceIndex);
                 mv.visitFieldInsn(PUTFIELD, packageClassName, "o" + i, args[i]);
             }
 
@@ -229,7 +225,7 @@ public class InnerClass {
                 mv.visitLabel(start);
                 {
                     mv.visitVarInsn(ALOAD, 0);
-                    System.out.println("packageClassName : " + packageClassName);
+                    LogUtil.println("packageClassName : " + packageClassName);
                     mv.visitFieldInsn(GETFIELD, packageClassName, "countDownLatch",
                             "Ljava/util/concurrent/CountDownLatch;");
                     mv.visitLdcInsn(outTime);
@@ -266,43 +262,48 @@ public class InnerClass {
                     if (result) {
                         {
                             int load = ALOAD;
-                            if (checkReturnStyle(returnStyle, "Z")) load = ILOAD;
-                            else if (checkReturnStyle(returnStyle, "C", "S", "I", "B"))
+                            if (returnStyle.startsWith("[")) load = ALOAD;
+                            else if ("Z".equals(returnStyle)) load = ILOAD;
+                            else if (Arrays.asList("C", "S", "I", "B").contains(returnStyle))
                                 load = ILOAD;
-                            else if (checkReturnStyle(returnStyle, "J"))
+                            else if ("J".equals(returnStyle))
                                 load = LLOAD;
-                            else if (checkReturnStyle(returnStyle, "F"))
+                            else if ("F".equals(returnStyle))
                                 load = FLOAD;
-                            else if (checkReturnStyle(returnStyle, "D"))
+                            else if ("D".equals(returnStyle))
                                 load = DLOAD;
                             else load = ALOAD;
                             mv.visitVarInsn(load, 0);
                             mv.visitFieldInsn(GETFIELD, packageClassName, "result", returnStyle);
-                            if (checkReturnStyle(returnStyle, "Z")) mv.visitInsn(IRETURN);
-                            else if (checkReturnStyle(returnStyle, "C", "S", "I", "B"))
+                            if (returnStyle.startsWith("[")) mv.visitInsn(ARETURN);
+                            else if ("Z".equals(returnStyle)) mv.visitInsn(IRETURN);
+                            else if (Arrays.asList("C", "S", "I", "B").contains(returnStyle))
                                 mv.visitInsn(IRETURN);
-                            else if (checkReturnStyle(returnStyle, "J"))
+                            else if ("J".equals(returnStyle))
                                 mv.visitInsn(LRETURN);
-                            else if (checkReturnStyle(returnStyle, "F"))
+                            else if ("F".equals(returnStyle))
                                 mv.visitInsn(FRETURN);
-                            else if (checkReturnStyle(returnStyle, "D"))
+                            else if ("D".equals(returnStyle))
                                 mv.visitInsn(DRETURN);
                             else mv.visitInsn(ARETURN);
                         }
                     } else {
-                        if (checkReturnStyle(returnStyle, "Z")) {
+                        if (returnStyle.startsWith("[")) {
+                            mv.visitInsn(ACONST_NULL);
+                            mv.visitInsn(ARETURN);
+                        } else if ("Z".equals(returnStyle)) {
                             mv.visitInsn(ICONST_0);
                             mv.visitInsn(IRETURN);
-                        } else if (checkReturnStyle(returnStyle, "C", "S", "I", "B")) {
+                        } else if (Arrays.asList("C", "S", "I", "B").contains(returnStyle)) {
                             mv.visitInsn(ICONST_0);
                             mv.visitInsn(IRETURN);
-                        } else if (checkReturnStyle(returnStyle, "J")) {
+                        } else if ("J".equals(returnStyle)) {
                             mv.visitInsn(LCONST_0);
                             mv.visitInsn(LRETURN);
-                        } else if (checkReturnStyle(returnStyle, "D")) {
+                        } else if ("D".equals(returnStyle)) {
                             mv.visitInsn(DCONST_0);
                             mv.visitInsn(DRETURN);
-                        } else if (checkReturnStyle(returnStyle, "F")) {
+                        } else if ("F".equals(returnStyle)) {
                             mv.visitInsn(FCONST_0);
                             mv.visitInsn(FRETURN);
                         } else {

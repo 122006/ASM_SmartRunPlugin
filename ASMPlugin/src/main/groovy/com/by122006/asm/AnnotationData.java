@@ -77,7 +77,7 @@ public class AnnotationData {
                 outAnnotation.contains(BGThreadClassName)
                         || outAnnotation.contains(UIThreadClassName)
         );
-//        System.out.println(String.format("annotation check ：%s %s",String.valueOf(outAnnotation),String.valueOf(b) ));
+//        LogUtil.println(String.format("annotation check ：%s %s",String.valueOf(outAnnotation),String.valueOf(b) ));
         return b;
     }
 

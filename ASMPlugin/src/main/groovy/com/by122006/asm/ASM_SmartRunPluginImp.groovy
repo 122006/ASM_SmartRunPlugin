@@ -11,7 +11,8 @@ import org.apache.commons.io.FileUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
+
+class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> {
     void apply(Project project) {
         /*project.task('testTask') << {
              println "Hello gradle plugin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -57,7 +58,7 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
     @Override
     void transform(Context context, Collection<TransformInput> inputs, Collection<TransformInput> referencedInputs,
                    TransformOutputProvider outputProvider, boolean isIncremental) throws IOException, TransformException, InterruptedException {
-        System.out.println("===============ASMSmartRunPluginImp visit start===============");
+        LogUtil.println("===============ASMSmartRunPluginImp visit start===============");
         long startTime = System.currentTimeMillis()
         //遍历inputs里的TransformInput
 //        println isIncremental
@@ -66,12 +67,12 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
             //遍历input里边的DirectoryInput
             input.directoryInputs.each {
                 DirectoryInput directoryInput ->
-                    System.out.println("************ Scanners init **********")
+                    LogUtil.println("************ Scanners init **********")
                     OverAllScanner.init();
                     CommomScanner.init();
-                    System.out.println("************ OverAllScanner start **********")
+                    LogUtil.println("************ OverAllScanner start **********")
                     new OverAllScanner().scan(directoryInput)
-                    System.out.println("************ CommomScanner start **********")
+                    LogUtil.println("************ CommomScanner start **********")
                     new CommomScanner().scan()
                     //处理完输入文件之后，要把输出给下一个任务
                     def dest = outputProvider.getContentLocation(directoryInput.name,
@@ -98,8 +99,8 @@ public class ASM_SmartRunPluginImp extends Transform implements Plugin<Project> 
             }
 
         }
-        long time = startTime - System.currentTimeMillis();
-        println '//===============ASMSmartRunPluginImp visit end== ' + time + 'ms' +
+        long time = System.currentTimeMillis() - startTime ;
+        println '//===============ASMSmartRunPluginImp visit end== 用时' + time + 'ms' +
                 ' =======//'
 
     }

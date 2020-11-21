@@ -1,10 +1,7 @@
 package com.by122006.asm.Scanners;
 
 
-import com.by122006.asm.AnnotationData;
-import com.by122006.asm.InnerClass;
-import com.by122006.asm.MethodInfo;
-import com.by122006.asm.Utils;
+import com.by122006.asm.*;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
@@ -63,17 +60,17 @@ public class CommomClassVisitor extends ClassVisitor {
         else {
             annotationData = getUsedAnnotationData(name, desc, null);
 //            if (annotationData == null) {
-//                System.out.println(String.format("%s.%s 方法 无签名数据 ", visitName, name));
+//                LogUtil.println(String.format("%s.%s 方法 无签名数据 ", visitName, name));
 //            }
             if (annotationData != null && annotationData.isUsed()) {
                 change = true;
             }
         }
         methodNames.add(name + desc);
-//        System.out.println(String.format("%s.%s 方法 %s ", visitName, name, change + ""));
+//        LogUtil.println(String.format("%s.%s 方法 %s ", visitName, name, change + ""));
         if (change) {
             MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
-            System.out.println(String.format("%s.%s 方法%s ", visitName, name, annotationData.toString()));
+            LogUtil.println(String.format("%s.%s 方法%s ", visitName, name, annotationData.toString()));
             MyAdviceAdapter av = null;
             av = new MyAdviceAdapter(ASM5, mv, access, name, desc, signature, exceptions, annotationData);
             mv = av;
@@ -115,13 +112,13 @@ public class CommomClassVisitor extends ClassVisitor {
         if (list != null) checkList.addAll(list);
         for (int i = 0; i < checkList.size(); i++) {
             String otherName = checkList.get(i);
-//            if (i>0||visitParentClassName!=null)System.out.println("visitParentClassName "+otherName);
+//            if (i>0||visitParentClassName!=null)LogUtil.println("visitParentClassName "+otherName);
             final ArrayList<MethodInfo> methodInfos = OverAllClassVisitor.methodInfos.get(otherName);
             if (methodInfos != null)
                 for (MethodInfo methodInfo : methodInfos) {
                     if (methodInfo.name.equals(methodName) && methodInfo.desc.equals(methodDesc)) {
                         if (methodInfo.annotations != null && methodInfo.annotations.isUsed()) {
-                            System.out.println(String.format("use %s.%s() because : %s", otherName, methodInfo.name,methodInfo.annotations.toString()));
+                            LogUtil.println(String.format("use %s.%s() because : %s", otherName, methodInfo.name,methodInfo.annotations.toString()));
                             return methodInfo.annotations;
                         }
                         break;
@@ -179,10 +176,10 @@ public class CommomClassVisitor extends ClassVisitor {
                 ov = mv;
 
                 if (Utils.checkAccess(CommomClassVisitor.this.access, ACC_INTERFACE)) {
-                    System.out.println("access: ACC_INTERFACE");
+                    LogUtil.println("access: ACC_INTERFACE");
 
                 } else
-                    System.out.println("access: " + Integer.toBinaryString(access) + "  -> " + Integer.toBinaryString
+                    LogUtil.println("access: " + Integer.toBinaryString(access) + "  -> " + Integer.toBinaryString
                             (access = (access | ACC_PUBLIC) & ~ACC_PRIVATE & ~ACC_PROTECTED));
 
                 mv = cv.visitMethod(access, name + "$SmartRun_" +
@@ -201,8 +198,8 @@ public class CommomClassVisitor extends ClassVisitor {
 //            if (!name.contains("$SmartRun_") && i == INVOKESTATIC && s.equals
 //                    ("com/by122006/asm_smartrunpluginimp/Utils/ThreadUtils") && (s1.equals("toUiThread") || s1.equals
 //                    ("toBgThread")) && !annotation.toLowerCase().contains("thread")) {
-//                System.out.println("!!!!method code : " + s1);
-//                System.out.println(String.format("access=%d,name=%s,desc=%s,signature=%s", access, name, desc,
+//                LogUtil.println("!!!!method code : " + s1);
+//                LogUtil.println(String.format("access=%d,name=%s,desc=%s,signature=%s", access, name, desc,
 //                        signature));
 //
 //                String style = s1.toLowerCase().contains("ui") ? "UI" : "BG";
@@ -224,8 +221,8 @@ public class CommomClassVisitor extends ClassVisitor {
                 String[] args = Utils.splitObjsArg(arg);
 
                 int num = args.length;
-                System.out.println(packageClassName);
-                System.out.println("Flag_Static:" + Flag_Static);
+                LogUtil.println(packageClassName);
+                LogUtil.println("Flag_Static:" + Flag_Static);
                 ov.visitCode();
 
                 Label l1 = new Label();
@@ -238,21 +235,9 @@ public class CommomClassVisitor extends ClassVisitor {
                     if (!Flag_Static)
                         ov.visitVarInsn(ALOAD, 0);
                     if (num > 0) {
+                        int argsSpaceIndex= Flag_Static ? 0 :  1;
                         for (int i = 0; i < num; i++) {
-                            int pa = ALOAD;
-                            if (args[i].length() > 1) {
-                                pa = ALOAD;
-                            } else {
-                                if (args[i].equals("Z")) pa = ILOAD;
-                                else if (args[i].equals("B")) pa = ILOAD;
-                                else if (args[i].equals("C")) pa = ILOAD;
-                                else if (args[i].equals("S")) pa = ILOAD;
-                                else if (args[i].equals("I")) pa = ILOAD;
-                                else if (args[i].equals("J")) pa = LLOAD;
-                                else if (args[i].equals("F")) pa = FLOAD;
-                                else if (args[i].equals("D")) pa = DLOAD;
-                            }
-                            ov.visitVarInsn(pa, Flag_Static ? i : i + 1);
+                            argsSpaceIndex=Utils.visitVarInsn(ov,args[i],argsSpaceIndex);
                         }
                     }
                     if (Flag_Static) {
@@ -277,7 +262,7 @@ public class CommomClassVisitor extends ClassVisitor {
                     return;
                 }
                 visitInnerClass(newClassName, null, null, 0);
-                System.out.println("newClassName:" + newClassName);
+                LogUtil.println("newClassName:" + newClassName);
 
                 ov.visitTypeInsn(NEW, newClassName);
                 ov.visitInsn(DUP);
@@ -289,22 +274,9 @@ public class CommomClassVisitor extends ClassVisitor {
                     ov.visitInsn(ACONST_NULL);
                 }
                 if (num > 0) {
+                    int argsSpaceIndex= Flag_Static ? 0 :  1;
                     for (int i = 0; i < num; i++) {
-                        int pa = ALOAD;
-                        System.out.println(args[i]);
-                        if (args[i].length() > 1) {
-                            pa = ALOAD;
-                        } else {
-                            if (args[i].equals("Z")) pa = ILOAD;
-                            else if (args[i].equals("B")) pa = ILOAD;
-                            else if (args[i].equals("C")) pa = ILOAD;
-                            else if (args[i].equals("S")) pa = ILOAD;
-                            else if (args[i].equals("I")) pa = ILOAD;
-                            else if (args[i].equals("J")) pa = LLOAD;
-                            else if (args[i].equals("F")) pa = FLOAD;
-                            else if (args[i].equals("D")) pa = DLOAD;
-                        }
-                        ov.visitVarInsn(pa, Flag_Static ? i : i + 1);
+                        argsSpaceIndex=Utils.visitVarInsn(ov,args[i],argsSpaceIndex);
                     }
                 }
                 ov.visitMethodInsn(INVOKEVIRTUAL, newClassName, "action", "(" + "L" + packageClassName + ";" + desc
@@ -319,14 +291,15 @@ public class CommomClassVisitor extends ClassVisitor {
                 if (returnStyle.equals("V")) {
                     ov.visitInsn(RETURN);
                 } else {
-                    if (checkReturnStyle(returnStyle, "Z")) ov.visitInsn(IRETURN);
-                    else if (checkReturnStyle(returnStyle, "C", "S", "I", "B"))
+                    if (returnStyle.startsWith("[")) ov.visitInsn(ARETURN);
+                    else if ("Z".equals(returnStyle)) ov.visitInsn(IRETURN);
+                    else if (Arrays.asList( "C", "S", "I", "B").contains(returnStyle))
                         ov.visitInsn(IRETURN);
-                    else if (checkReturnStyle(returnStyle, "J"))
+                    else if ("J".equals(returnStyle))
                         ov.visitInsn(LRETURN);
-                    else if (checkReturnStyle(returnStyle, "F"))
+                    else if ("F".equals(returnStyle))
                         ov.visitInsn(FRETURN);
-                    else if (checkReturnStyle(returnStyle, "D"))
+                    else if ("D".equals(returnStyle))
                         ov.visitInsn(DRETURN);
                     else ov.visitInsn(ARETURN);
                 }

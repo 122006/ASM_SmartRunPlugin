@@ -1,10 +1,8 @@
 package com.by122006.asm.Scanners;
 
-import com.by122006.asm.AnnotationData;
-import com.by122006.asm.MethodInfo;
-import com.by122006.asm.MyAnnotationVisitor;
-import com.by122006.asm.Utils;
+import com.by122006.asm.*;
 
+import groovy.transform.builder.Builder;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -65,9 +63,10 @@ public class OverAllClassVisitor extends ClassVisitor {
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 //        super.visit(version, access, name, signature, superName, interfaces);
 
-        if(!classFilePaths.contains(file.getPath()))classFilePaths.add(file.getPath());else return;
+        if (!classFilePaths.contains(file.getPath())) classFilePaths.add(file.getPath());
+        else return;
 
-//        System.out.println("filename : " + name + " access : " + Integer.toBinaryString(access));
+//        LogUtil.println("filename : " + name + " access : " + Integer.toBinaryString(access));
 
         visitName = name;
         ArrayList<String> list = new ArrayList<>();
@@ -76,13 +75,13 @@ public class OverAllClassVisitor extends ClassVisitor {
         }
         visitName = name;
         if (!superName.contains("java/lang/Object")) {
-//            System.out.println("=========="+superName+"");
-            list.add(0,"L"+ superName+";");
+//            LogUtil.println("=========="+superName+"");
+            list.add(0, "L" + superName + ";");
         }
-        for(String str:interfaces){
-            list.add("L"+ str+";");
+        for (String str : interfaces) {
+            list.add("L" + str + ";");
         }
-        classExtends.put("L"+visitName+";", list);
+        classExtends.put("L" + visitName + ";", list);
 
         if (Utils.checkAccess(access, ACC_INTERFACE)) {
             interfaceFilePaths.add(file.getPath());
@@ -100,7 +99,7 @@ public class OverAllClassVisitor extends ClassVisitor {
             av = new MyAdviceAdapter(ASM5, mv, access, name, desc, signature, exceptions);
             return av;
         } catch (Exception e) {
-            System.out.println("OverAllClassVisitor visitMethod");
+            LogUtil.println("OverAllClassVisitor visitMethod");
             e.printStackTrace();
         }
         return super.visitMethod(access, name, desc, signature, exceptions);
@@ -147,14 +146,14 @@ public class OverAllClassVisitor extends ClassVisitor {
                 annotationData = new AnnotationData();
                 annotationData.setOutAnnotation(annotation);
                 annotationData.setReadFromAnnotation(true);
-                System.out.println("!!!!" + annotation);
-                System.out.println(String.format("access=%d,name=%s,desc=%s,signature=%s", access, name, desc,
+                LogUtil.println("!!!!" + annotation);
+                LogUtil.println(String.format("access=%d,name=%s,desc=%s,signature=%s", access, name, desc,
                         signature));
                 ifsave = true;
 
                 return new MyAnnotationVisitor(ASM5, super.visitAnnotation(s, b), annotationData);
             }
-            return super.visitAnnotation(s,b);
+            return super.visitAnnotation(s, b);
 
         }
 
@@ -165,11 +164,8 @@ public class OverAllClassVisitor extends ClassVisitor {
                 annotations) {
             String className = "L" + packageClassName + ";";
             MethodInfo methodInfo = new MethodInfo(access, name, desc, signature, exceptions, annotations);
-            ArrayList<MethodInfo> list = OverAllClassVisitor.methodInfos.get(className);
-            if (list == null) {
-                list = new ArrayList<MethodInfo>();
-                OverAllClassVisitor.methodInfos.put(className, list);
-            }
+            ArrayList<MethodInfo> list = OverAllClassVisitor.methodInfos.computeIfAbsent(className
+                    , k -> new ArrayList<MethodInfo>());
             list.add(methodInfo);
 //            InterfaceClassVisitor.interfaceClassName.add(className);
         }
@@ -177,11 +173,8 @@ public class OverAllClassVisitor extends ClassVisitor {
         @Override
         public void visitMethodInsn(int i, String s, String s1, String s2, boolean b) {
             if (!ifsave)
-                if (!name.contains("$SmartRun_") && i == INVOKESTATIC && s.equals
-                        ("com/by122006/asm_smartrunpluginimp/Utils/ThreadUtils") && (s1.equals("toUiThread") ||
-                        s1.equals
-                                ("toBgThread"))) {
-
+                if (!name.contains("$SmartRun_") && i == INVOKESTATIC && s.equals("com/by122006/asm_smartrunpluginimp/Utils/ThreadUtils")
+                        && (s1.equals("toUiThread") || s1.equals("toBgThread"))) {
                     if (annotationData == null) annotationData = new AnnotationData();
                     if (!annotationData.isUsed()) {
                         if (s1.equals("toBgThread"))
@@ -198,10 +191,9 @@ public class OverAllClassVisitor extends ClassVisitor {
         @Override
         public void visitEnd() {
             save(access, name, desc, signature, exceptions, annotationData);
-            if (annotationData!=null){
-                System.out.println(annotationData.toString());
+            if (annotationData != null) {
+                LogUtil.println(annotationData.toString());
             }
-
             super.visitEnd();
         }
     }
