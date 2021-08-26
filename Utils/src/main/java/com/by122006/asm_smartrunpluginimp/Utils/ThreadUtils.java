@@ -18,31 +18,19 @@ public class ThreadUtils {
 
     public static void runOnUiThread(Runnable runnable){
 //        uiThreadAct.runUITask(runnable);
-        UiHandle.run(runnable);
+        UiHandle.getHandler().post(runnable);
     }
-    protected static class UiHandle extends Handler {
-        static UiHandle handle;
-        UiHandle() {
-            super(Looper.getMainLooper());
-        }
-        protected static UiHandle getHandler(){
+    protected static class UiHandle {
+        static Handler handle;
+        protected static Handler getHandler(){
             if (handle == null) {
                 synchronized (UiHandle.class) {
                     if (handle == null) {
-                        handle = new UiHandle();
+                        handle = new Handler(Looper.myLooper());
                     }
                 }
             }
             return handle;
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            ((Runnable)msg.obj).run();
-        }
-        public static void run(Runnable runnable){
-            Message message=new Message();
-            message.obj=runnable;
-            getHandler().sendMessage(message);
         }
     }
 

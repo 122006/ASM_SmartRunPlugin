@@ -7,7 +7,6 @@ import com.by122006.asm_smartrunpluginimp.Utils.ThreadUtils;
  */
 
 public class ThreadManager {
-    public static ThreadManager instance = null;
 
     static NewBgThreadAction newBgThreadAction;
 
@@ -15,30 +14,39 @@ public class ThreadManager {
 
     }
 
-    public static ThreadManager getInstance() {
-        if (instance == null) {
-            synchronized (ThreadManager.class) {
-                if (instance == null) {
-                    instance = new ThreadManager();
-                }
-            }
-        }
-        return instance;
-    }
-
-    public static void postUIThread(Runnable runnable) {
+    public static void postUIThread(RunnableThrowable<?> throwable) {
         try {
-            ThreadUtils.runOnUiThread(runnable);
+            ThreadUtils.runOnUiThread(() -> {
+                try {
+                    throwable.run();
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void postBGThread(Runnable runnable) {
+//    public static void postBGThread(Runnable runnable) {
+//        if (newBgThreadAction == null)
+//            new Thread(runnable).start();
+//        else newBgThreadAction.post(runnable);
+//    }
+    public static void postBGThread(RunnableThrowable<?> throwable) {
+        Runnable runnable = () -> {
+            try {
+                throwable.run();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        };
         if (newBgThreadAction == null)
             new Thread(runnable).start();
         else newBgThreadAction.post(runnable);
     }
+
+
 
     /**
      * 设置需要使用的线程池方法
