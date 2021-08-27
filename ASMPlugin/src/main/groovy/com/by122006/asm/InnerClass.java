@@ -94,7 +94,7 @@ public class InnerClass {
         AnnotationVisitor av0;
 
         cw.visit(V1_7, ACC_PROTECTED + ACC_SUPER, packageClassName, null, "java/lang/Object", new
-                String[]{"java/lang/Runnable"});
+                String[]{"com/by122006/asm_smartrunpluginimp/RunnableThrowable"});
 
         cw.visitOuterClass(oPackageClassName, doMethodName, desc);
 
@@ -206,7 +206,7 @@ public class InnerClass {
             }
             mv.visitVarInsn(ALOAD, 0);
             mv.visitMethodInsn(INVOKESTATIC, "com/by122006/asm_smartrunpluginimp/ThreadManager", "post" + threadStyle
-                    .toUpperCase() + "Thread", "(Ljava/lang/Runnable;)V", false);
+                    .toUpperCase() + "Thread", "(Lcom/by122006/asm_smartrunpluginimp/RunnableThrowable;)V", false);
 
             if (result) {
                 Label start = new Label();
