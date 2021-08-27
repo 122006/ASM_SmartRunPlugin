@@ -26,7 +26,7 @@ public class ThreadUtils {
             if (handle == null) {
                 synchronized (UiHandle.class) {
                     if (handle == null) {
-                        handle = new Handler(Looper.myLooper());
+                        handle = new Handler(Looper.getMainLooper());
                     }
                 }
             }
