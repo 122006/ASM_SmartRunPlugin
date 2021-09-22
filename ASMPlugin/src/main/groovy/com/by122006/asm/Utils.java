@@ -79,12 +79,12 @@ public class Utils {
      * @return -1:不存在
      */
     public static int getClassHaveIndexInDir(File file) {
-        String oName = file.getAbsolutePath().replace(".class", "");
+        String oName = file.getPath().replace(".class", "");
         File parent = file.getParentFile();
         File[] files = parent.listFiles();
         int i = -1;
         for (File f : files) {
-            String name = f.getAbsolutePath().replace(".class", "");
+            String name = f.getPath().replace(".class", "");
             if (name.startsWith(oName + "$")) {
                 if (name.contains("_SmartRun_")) {
                     try {

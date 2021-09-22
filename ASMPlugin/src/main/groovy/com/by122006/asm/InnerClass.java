@@ -71,8 +71,8 @@ public class InnerClass {
                                         result) throws Exception {
         int index = Utils.getClassHaveIndexInDir(file);
         index++;
-        LogUtil.println(file.getAbsolutePath());
-        String allClassPath = file.getAbsolutePath().replace(".class", "") + "$" + doMethodName.replace("$",
+        LogUtil.println(file.getPath());
+        String allClassPath = file.getPath().replace(".class", "") + "$" + doMethodName.replace("$",
                 "_") + "_" + index + ".class";
         String className = allClassPath.substring(allClassPath.lastIndexOf("\\") + 1, allClassPath.lastIndexOf("."));
         String returnStyle = desc.substring(desc.lastIndexOf(")") + 1);

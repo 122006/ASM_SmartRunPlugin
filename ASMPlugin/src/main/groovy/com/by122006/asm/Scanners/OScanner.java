@@ -65,7 +65,7 @@ public abstract class OScanner {
                         byte[] code = classWriter.toByteArray();
                         try {
                             FileOutputStream fos = new FileOutputStream(
-                                    file.getParentFile().getAbsolutePath() + File.separator + name);
+                                    file.getParentFile().getPath() + File.separator + name);
 //                            LogUtil.println("save in "+file.getParentFile().getAbsolutePath() + File.separator + name);
                             fos.write(code);
                             fos.close();

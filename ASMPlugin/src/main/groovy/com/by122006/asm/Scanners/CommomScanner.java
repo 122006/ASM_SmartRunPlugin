@@ -20,6 +20,7 @@ public class CommomScanner extends OScanner {
     public ClassVisitor defineClassVisitor(String packageClassName,File file, ClassWriter classWriter) {
         return new CommomClassVisitor(packageClassName,file,classWriter);
     }
+
     /**
      * 开始扫描
      */
