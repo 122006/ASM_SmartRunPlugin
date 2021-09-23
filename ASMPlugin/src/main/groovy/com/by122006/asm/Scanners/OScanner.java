@@ -40,7 +40,6 @@ public abstract class OScanner {
 
             String name = file.getName();
 //            LogUtil.println("## scan "+name);
-            //这里进行我们的处理 TODO
             if (name.endsWith(".class") && !name.startsWith("R$") &&
                     !"R.class".equals(name) && !"BuildConfig.class".equals(name) && !name.contains
                     ("R$SmartRun_")) {
@@ -58,7 +57,7 @@ public abstract class OScanner {
                     String className = name.split(".class")[0];
                     String packageClassName=classReader.getClassName();
                     if (packageClassName==null)return;
-                    //LogUtil.println("packageClassName : "+packageClassName);
+                    LogUtil.println("packageClassName : "+packageClassName);
                     ClassVisitor cv = defineClassVisitor(packageClassName, file, classWriter);
                     classReader.accept(cv, EXPAND_FRAMES);
                     if (needWrite()) {
@@ -66,7 +65,7 @@ public abstract class OScanner {
                         try {
                             FileOutputStream fos = new FileOutputStream(
                                     file.getParentFile().getPath() + File.separator + name);
-//                            LogUtil.println("save in "+file.getParentFile().getAbsolutePath() + File.separator + name);
+                            LogUtil.println("save in "+file.getParentFile().getPath() + File.separator + name);
                             fos.write(code);
                             fos.close();
                         } catch (IOException e) {
