@@ -74,11 +74,11 @@ public class InnerClass {
         LogUtil.println(file.getPath());
         String allClassPath = file.getPath().replace(".class", "") + "$" + doMethodName.replace("$",
                 "_") + "_" + index + ".class";
-        String className = allClassPath.substring(allClassPath.lastIndexOf("\\") + 1, allClassPath.lastIndexOf("."));
+        String className = allClassPath.substring(allClassPath.lastIndexOf(File.separatorChar) + 1, allClassPath.lastIndexOf("."));
         String returnStyle = desc.substring(desc.lastIndexOf(")") + 1);
         boolean needReturn = !returnStyle.equals("V");
         String oObjClassName = oObjType.substring(1, oObjType.length() - 1);
-        String packageClassName = oPackageClassName.substring(0, oPackageClassName.lastIndexOf("/") + 1) + className;
+        String packageClassName = oPackageClassName.substring(0, oPackageClassName.lastIndexOf(File.separatorChar) + 1) + className;
 
         LogUtil.println("returnStyle : " + returnStyle);
         //LogUtil.println("packageClassName : " + packageClassName);
