@@ -78,7 +78,7 @@ public class InnerClass {
         String returnStyle = desc.substring(desc.lastIndexOf(")") + 1);
         boolean needReturn = !returnStyle.equals("V");
         String oObjClassName = oObjType.substring(1, oObjType.length() - 1);
-        String packageClassName = oPackageClassName.substring(0, oPackageClassName.lastIndexOf(File.separatorChar) + 1) + className;
+        String packageClassName = oPackageClassName.substring(0, oPackageClassName.lastIndexOf("/") + 1) + className;
 
         LogUtil.println("returnStyle : " + returnStyle);
         //LogUtil.println("packageClassName : " + packageClassName);
