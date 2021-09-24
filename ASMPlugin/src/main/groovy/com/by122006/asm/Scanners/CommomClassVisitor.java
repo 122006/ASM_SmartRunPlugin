@@ -250,7 +250,7 @@ public class CommomClassVisitor extends ClassVisitor {
                 }
                 String newClassName = null;
                 try {
-                    newClassName = packageClassName.substring(0, packageClassName.lastIndexOf(File.separatorChar) + 1) +
+                    newClassName = packageClassName.substring(0, packageClassName.lastIndexOf("/") + 1) +
                             InnerClass.create(file, packageClassName, desc, style, Flag_Static, "L" + packageClassName +
                                             ";",
                                     name + "$SmartRun_" + style, annotationData.isNewThread(), annotationData.getOutTime
